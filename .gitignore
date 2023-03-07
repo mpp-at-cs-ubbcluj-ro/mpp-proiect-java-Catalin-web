@@ -103,3 +103,5 @@ fabric.properties
 
 .DS_Store
 .idea
+/proiect/.gradle/
+/proiect/build/
