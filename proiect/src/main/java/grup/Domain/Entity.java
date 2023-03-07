@@ -1,17 +1,17 @@
 package grup.Domain;
 
-public class Entity {
-    public Entity(String id) {
+public class Entity<Type> {
+    public Entity(Type id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Type getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Type id) {
         this.id = id;
     }
 
-    private String id;
+    private Type id;
 }
