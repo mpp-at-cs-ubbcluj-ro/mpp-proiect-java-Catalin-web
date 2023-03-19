@@ -1,10 +1,18 @@
 package grup.Domain;
 
-public class User extends Entity<String>{
+import java.util.Objects;
+
+public class User extends Entity<Integer>{
     private String email;
     private String parola;
 
-    public User(String id, String email, String parola) {
+    public User(String email, String parola) {
+        super(-1);
+        this.email = email;
+        this.parola = parola;
+    }
+
+    public User(Integer id, String email, String parola) {
         super(id);
         this.email = email;
         this.parola = parola;
@@ -24,5 +32,26 @@ public class User extends Entity<String>{
 
     public void setParola(String parola) {
         this.parola = parola;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(email, user.email) && Objects.equals(parola, user.parola);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, parola);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", parola='" + parola + '\'' +
+                '}';
     }
 }

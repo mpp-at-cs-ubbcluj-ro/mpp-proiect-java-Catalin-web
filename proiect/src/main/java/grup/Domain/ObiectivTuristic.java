@@ -2,18 +2,18 @@ package grup.Domain;
 
 import java.util.Objects;
 
-public class FirmaTransport extends Entity<Integer>{
-    public FirmaTransport(String nume){
-        super(-1);
-        this.nume=nume;
-    }
+public class ObiectivTuristic extends Entity<Integer>{
+    private String nume;
 
-    public FirmaTransport(Integer id, String nume) {
-        super(id);
+    public ObiectivTuristic(String nume) {
+        super(-1);
         this.nume = nume;
     }
 
-    private String nume;
+    public ObiectivTuristic(Integer id, String nume) {
+        super(id);
+        this.nume = nume;
+    }
 
     public String getNume() {
         return nume;
@@ -27,7 +27,7 @@ public class FirmaTransport extends Entity<Integer>{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FirmaTransport that = (FirmaTransport) o;
+        ObiectivTuristic that = (ObiectivTuristic) o;
         return Objects.equals(nume, that.nume);
     }
 
@@ -38,7 +38,7 @@ public class FirmaTransport extends Entity<Integer>{
 
     @Override
     public String toString() {
-        return "FirmaTransport{" +
+        return "ObiectivTuristic{" +
                 "nume='" + nume + '\'' +
                 '}';
     }
