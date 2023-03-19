@@ -7,7 +7,7 @@ import java.util.List;
 public interface Repository<ID,entity extends Entity<ID>> {
     void adauga(entity entity);
     void sterge(entity entity);
-    entity cautaId(String id);
+    entity cautaId(ID id);
     List<entity> getAll();
     void update(entity entitate,entity nouaEntitate);
 }
