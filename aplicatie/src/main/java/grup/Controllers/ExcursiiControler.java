@@ -1,5 +1,6 @@
 package grup.Controllers;
 
+import grup.Client.ITripClient;
 import grup.Domain.Excursie;
 import grup.Service.Service;
 import javafx.application.Platform;
@@ -170,6 +171,13 @@ public class ExcursiiControler implements Controller {
         this.srv = srv;
         List<Excursie> lst = srv.getAllExcursii();
         model.setAll(lst);
+    }
+
+    private ITripClient client;
+
+    @Override
+    public void setClient(ITripClient client) {
+        this.client = client;
     }
 
     public void cautaOviectiv(ActionEvent actionEvent) {

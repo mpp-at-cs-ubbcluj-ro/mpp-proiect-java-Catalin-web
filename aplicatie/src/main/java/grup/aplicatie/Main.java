@@ -1,5 +1,7 @@
 package grup.aplicatie;
 
+import grup.Client.ITripClient;
+import grup.Client.TripClient;
 import grup.Controllers.Controller;
 import grup.Controllers.ExcursiiControler;
 import grup.Domain.*;
@@ -38,8 +40,11 @@ public class Main extends Application {
         Parent root = (Parent) fxmlLoader.load();
         Scene scene = new Scene(root);
 
+        ITripClient client = new TripClient("host");
+
         Controller controller = fxmlLoader.getController();
         controller.setService(srv);
+        controller.setClient(client);
 
         stage.setTitle("Cea mai tare aplicatie");
         stage.setScene(scene);
