@@ -1,5 +1,6 @@
 package grup.Controllers;
 
+import grup.Client.ITripClient;
 import grup.Service.Service;
 import grup.aplicatie.Main;
 import javafx.event.ActionEvent;
@@ -28,7 +29,8 @@ public class LoginController implements Controller{
     }
 
     public void onLogin(ActionEvent actionEvent) throws IOException {
-        srv.login(emailField.getText(),passField.getText());
+        client.login(emailField.getText(),passField.getText());
+        // srv.login(emailField.getText(),passField.getText());
         travelPage(actionEvent);
     }
 
@@ -40,6 +42,13 @@ public class LoginController implements Controller{
     @Override
     public void setService(Service srv) {
         this.srv = srv;
+    }
+
+    private ITripClient client;
+
+    @Override
+    public void setClient(ITripClient client) {
+        this.client = client;
     }
 
     private void travelPage(ActionEvent actionEvent) throws IOException {
