@@ -1,6 +1,6 @@
 package grup.Domain;
 
-import java.time.LocalTime;
+import java.util.Map;
 import java.util.Objects;
 
 public class Excursie extends Entity<Integer>{
@@ -90,5 +90,16 @@ public class Excursie extends Entity<Integer>{
     @Override
     public int hashCode() {
         return Objects.hash(idObiectiv, idFirmaTransport, ora, pret, nrLocuriTotale);
+    }
+
+    public static Excursie deserialize(Map<String, Object> map)
+    {
+        Integer id = ((Double) map.get("id")).intValue();
+        Integer idObiectiv = ((Double) map.get("idObiectiv")).intValue();
+        Integer idFirmaTransport = ((Double) map.get("idFirmaTransport")).intValue();
+        String ora = (String) map.get("ora");
+        Float pret = ((Double) map.get("pret")).floatValue();
+        Integer nrLocuriTotale = ((Double) map.get("nrLocuriTotale")).intValue();
+        return new Excursie(id,idObiectiv,idFirmaTransport,Integer.valueOf(ora),pret,nrLocuriTotale);
     }
 }

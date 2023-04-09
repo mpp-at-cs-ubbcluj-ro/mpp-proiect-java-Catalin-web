@@ -1,7 +1,6 @@
 package grup.Controllers;
 
 import grup.Client.ITripClient;
-import grup.Service.Service;
 import grup.aplicatie.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,8 +14,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LoginController implements Controller{
-    private Service srv;
-
     @FXML
     private TextField emailField;
 
@@ -35,13 +32,8 @@ public class LoginController implements Controller{
     }
 
     public void onRegister(ActionEvent actionEvent) throws IOException {
-        srv.inregistrare(emailField.getText(),passField.getText());
+        client.inregistrare(emailField.getText(),passField.getText());
         travelPage(actionEvent);
-    }
-
-    @Override
-    public void setService(Service srv) {
-        this.srv = srv;
     }
 
     private ITripClient client;
@@ -58,7 +50,7 @@ public class LoginController implements Controller{
         stage.setScene(new Scene(root));
         Controller loginController = (ExcursiiControler)fxmlLoader.getController();
 
-        loginController.setService(srv);
+        loginController.setClient(client);
         stage.show();
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }

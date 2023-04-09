@@ -1,5 +1,6 @@
 package grup.Domain;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class FirmaTransport extends Entity<Integer>{
@@ -41,5 +42,12 @@ public class FirmaTransport extends Entity<Integer>{
         return "FirmaTransport{" +
                 "nume='" + nume + '\'' +
                 '}';
+    }
+
+    public static FirmaTransport deserialize(Map<String, Object> map)
+    {
+        Integer id = ((Double) map.get("id")).intValue();
+        String nume = (String) map.get("nume");
+        return new FirmaTransport(id,nume);
     }
 }

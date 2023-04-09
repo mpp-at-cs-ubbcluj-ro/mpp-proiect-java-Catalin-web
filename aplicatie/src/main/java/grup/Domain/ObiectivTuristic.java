@@ -1,5 +1,6 @@
 package grup.Domain;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class ObiectivTuristic extends Entity<Integer>{
@@ -41,5 +42,12 @@ public class ObiectivTuristic extends Entity<Integer>{
         return "ObiectivTuristic{" +
                 "nume='" + nume + '\'' +
                 '}';
+    }
+
+    public static ObiectivTuristic deserialize(Map<String, Object> map)
+    {
+        Integer id = ((Double) map.get("id")).intValue();
+        String nume = (String) map.get("nume");
+        return new ObiectivTuristic(id,nume);
     }
 }

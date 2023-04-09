@@ -2,8 +2,6 @@ package grup.Controllers;
 
 import grup.Client.ITripClient;
 import grup.Domain.Excursie;
-import grup.Service.Service;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,14 +13,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class ExcursiiControler implements Controller {
 
-    private Service srv;
     private ObservableList<Excursie> model= FXCollections.observableArrayList();
     private ObservableList<Excursie> model2= FXCollections.observableArrayList();
     @FXML
@@ -69,12 +64,22 @@ public class ExcursiiControler implements Controller {
     public void initialize() {
         numeObiectivColumn.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
-            String valoareCelula = srv.getNumeObiectivById(entity.getIdObiectiv());
+            String valoareCelula = null;
+            try {
+                valoareCelula = client.getNumeObiectivById(entity.getIdObiectiv());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return new ReadOnlyObjectWrapper<String>(valoareCelula);}
         );
         numeFirmaColumn.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
-            String valoareCelula = srv.getNumeFirmaById(entity.getIdFirmaTransport());
+            String valoareCelula = null;
+            try {
+                valoareCelula = client.getNumeFirmaById(entity.getIdFirmaTransport());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return new ReadOnlyObjectWrapper<String>(valoareCelula);}
         );
 
@@ -90,7 +95,12 @@ public class ExcursiiControler implements Controller {
 
         locuriDisponibileColumn.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
-            Integer locuriDisponibile = srv.getNumarLocuriDisponibile(entity.getId());
+            Integer locuriDisponibile = null;
+            try {
+                locuriDisponibile = client.getNumarLocuriDisponibile(entity.getId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             return new ReadOnlyObjectWrapper<Integer>(locuriDisponibile);}
         );
@@ -99,7 +109,12 @@ public class ExcursiiControler implements Controller {
 
         numeFirmaColumn2.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
-            String valoareCelula = srv.getNumeFirmaById(entity.getIdFirmaTransport());
+            String valoareCelula = null;
+            try {
+                valoareCelula = client.getNumeFirmaById(entity.getIdFirmaTransport());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return new ReadOnlyObjectWrapper<String>(valoareCelula);}
         );
 
@@ -115,7 +130,12 @@ public class ExcursiiControler implements Controller {
 
         locuriDisponibileColumn2.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
-            Integer locuriDisponibile = srv.getNumarLocuriDisponibile(entity.getId());
+            Integer locuriDisponibile = null;
+            try {
+                locuriDisponibile = client.getNumarLocuriDisponibile(entity.getId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return new ReadOnlyObjectWrapper<Integer>(locuriDisponibile);}
         );
         tabelExcursii2.setItems(model2);
@@ -166,40 +186,35 @@ public class ExcursiiControler implements Controller {
         });
     }
 
-    @Override
-    public void setService(Service srv) {
-        this.srv = srv;
-        List<Excursie> lst = srv.getAllExcursii();
-        model.setAll(lst);
-    }
-
     private ITripClient client;
 
     @Override
-    public void setClient(ITripClient client) {
+    public void setClient(ITripClient client) throws IOException {
         this.client = client;
+        List<Excursie> lst = client.getAllExcursii();
+        model.setAll(lst);
     }
 
-    public void cautaOviectiv(ActionEvent actionEvent) {
+    public void cautaOviectiv(ActionEvent actionEvent) throws IOException {
         reloadTables();
     }
 
-    public void rezervaBilet(ActionEvent actionEvent) {
+    public void rezervaBilet(ActionEvent actionEvent) throws IOException {
         String nume = numeClient.getText();
         Integer nrBilete = Integer.parseInt(numarBilete.getText());
         String nrTelefon = numarTelefon.getText();
         Excursie excursie = tabelExcursii2.getSelectionModel().getSelectedItem();
-        srv.adaugaRezervare(excursie.getId(),nume,nrTelefon,nrBilete);
+        client.adaugaRezervare(excursie.getId(),nume,nrTelefon,nrBilete);
 
-        model.setAll(srv.getAllExcursii());
+        model.setAll(client.getAllExcursii());
         reloadTables();
     }
 
-    private void reloadTables(){
+    private void reloadTables() throws IOException {
         String nume = numeObiectiv.getText();
         Integer min = Integer.parseInt(minOra.getText());
         Integer max =Integer.parseInt(maxOra.getText());
-        model2.setAll(srv.getExursiiByObiectivTuristic(nume,min,max));
-        model.setAll(srv.getAllExcursii());
+        model2.setAll(client.getExursiiByObiectivTuristic(nume,min,max));
+        model.setAll(client.getAllExcursii());
     }
 }

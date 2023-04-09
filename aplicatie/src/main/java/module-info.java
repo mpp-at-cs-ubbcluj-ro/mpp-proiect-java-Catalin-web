@@ -4,7 +4,7 @@ module grup.aplicatie {
     requires java.sql;
     requires org.apache.logging.log4j;
     requires java.net.http;
-
+    requires com.google.gson;
 
     opens grup.aplicatie to javafx.fxml;
     exports grup.aplicatie;

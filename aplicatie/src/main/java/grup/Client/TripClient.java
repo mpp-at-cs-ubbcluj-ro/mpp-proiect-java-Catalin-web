@@ -1,12 +1,19 @@
 package grup.Client;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import grup.Domain.Excursie;
+import grup.Domain.FirmaTransport;
 import grup.Domain.ObiectivTuristic;
+import grup.Domain.Persoana;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,60 +27,201 @@ public class TripClient implements ITripClient{
 
     @Override
     public void login(String email, String parola) throws IOException {
-        String path = "http://localhost:12500/v1/authenticate?email="+email+"&password="+parola;
-        URL url = new URL(path);
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/login");
+        requestBuilder.addValue("email",email);
+        requestBuilder.addValue("password",parola);
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+    }
+
+    @Override
+    public void inregistrare(String email, String parola) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/authenticate");
+        requestBuilder.addValue("email",email);
+        requestBuilder.addValue("password",parola);
+        URL url = requestBuilder.build();
+
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
     }
 
     @Override
-    public void inregistrare(String email, String parola) {
+    public void logout() throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/logout");
+        URL url = requestBuilder.build();
 
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
     }
 
     @Override
-    public void logout() {
+    public List<Excursie> getAllExcursii() throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/trips");
+        URL url = requestBuilder.build();
 
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        List<Excursie> lst = new ArrayList<>();
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<List<Map<String, Object>>>(){}.getType();
+            List<Map<String, Object>> hashMapList = new Gson().fromJson(output, type);
+
+            // Print the list of hash maps
+            for (Map<String, Object> map : hashMapList) {
+                Excursie excursie = Excursie.deserialize(map);
+                lst.add(excursie);
+            }
+        }
+        return lst;
     }
 
     @Override
-    public List<Excursie> getAllExcursii() {
+    public String getNumeFirmaById(Integer idFirma) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/firma/id");
+        requestBuilder.addValue("idFirma", idFirma.toString());
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> map = new Gson().fromJson(output, type);
+
+            FirmaTransport excursie = FirmaTransport.deserialize(map);
+            return excursie.getNume();
+        }
         return null;
     }
 
     @Override
-    public String getNumeFirmaById(Integer idFirma) {
+    public String getNumeObiectivById(Integer idObiectiv) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/obiectiv/id");
+        requestBuilder.addValue("idObiectiv", idObiectiv.toString());
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> map = new Gson().fromJson(output, type);
+
+            ObiectivTuristic obiectivTuristic = ObiectivTuristic.deserialize(map);
+            return obiectivTuristic.getNume();
+        }
         return null;
     }
 
     @Override
-    public String getNumeObiectivById(Integer idObiectiv) {
+    public Integer getNumarLocuriDisponibile(Integer idExcursie) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/trip/left");
+        requestBuilder.addValue("idExcursie", idExcursie.toString());
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            return Integer.parseInt(output);
+        }
         return null;
     }
 
     @Override
-    public Integer getNumarLocuriDisponibile(Integer idExcursie) {
+    public ObiectivTuristic getObiectivTuristicByNume(String numeObiectiv) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/obiectiv/nume");
+        requestBuilder.addValue("numeObiectiv", numeObiectiv);
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> map = new Gson().fromJson(output, type);
+
+            return ObiectivTuristic.deserialize(map);
+        }
         return null;
     }
 
     @Override
-    public ObiectivTuristic getObiectivTuristicByNume(String numeObiectiv) {
+    public List<Excursie> getExursiiByObiectivTuristic(String numeObiectiv, Integer minOra, Integer maxOra) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/trips/obiectiv");
+        requestBuilder.addValue("numeObiectiv",numeObiectiv);
+        requestBuilder.addValue("oraMinim",minOra.toString());
+        requestBuilder.addValue("oraMaxim",maxOra.toString());
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        List<Excursie> lst = new ArrayList<>();
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<List<Map<String, Object>>>(){}.getType();
+            List<Map<String, Object>> hashMapList = new Gson().fromJson(output, type);
+
+            // Print the list of hash maps
+            for (Map<String, Object> map : hashMapList) {
+                Excursie excursie = Excursie.deserialize(map);
+                lst.add(excursie);
+            }
+        }
+        return lst;
+    }
+
+    @Override
+    public Integer getIdPersoanaByNume(String numePersoana, String numarTelefon) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/query/persoana/nume");
+        requestBuilder.addValue("numePersoana", numePersoana);
+        requestBuilder.addValue("numarTelefon", numarTelefon);
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        while ((output = br.readLine()) != null) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> map = new Gson().fromJson(output, type);
+
+            return Persoana.deserialize(map).getId();
+        }
         return null;
     }
 
     @Override
-    public List<Excursie> getExursiiByObiectivTuristic(String numeObiectiv, Integer minOra, Integer maxOra) {
-        return null;
-    }
+    public void adaugaRezervare(Integer idExcursie, String numeClient, String numarTelefonClient, Integer numarBileteDorite) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl,"/v1/add/rezervare");
+        requestBuilder.addValue("numeClient",numeClient);
+        requestBuilder.addValue("numarTelefon", numarTelefonClient);
+        requestBuilder.addValue("numarBileteDorite", numarBileteDorite.toString());
+        requestBuilder.addValue("idExcursie", idExcursie.toString());
+        URL url = requestBuilder.build();
 
-    @Override
-    public Integer getIdPersoanaByNume(String numePersoana, String numarTelefon) {
-        return null;
-    }
-
-    @Override
-    public void adaugaRezervare(Integer idExcursie, String numeClient, String numarTelefonClient, Integer numarBileteDorite) {
-
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        int responseCode = con.getResponseCode();
     }
 }

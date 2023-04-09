@@ -1,5 +1,6 @@
 package grup.Domain;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class Rezervare extends Entity<Integer>{
@@ -65,5 +66,15 @@ public class Rezervare extends Entity<Integer>{
                 ", idPersoana=" + idPersoana +
                 ", nrBilete=" + nrBilete +
                 '}';
+    }
+
+    public static Rezervare deserialize(Map<String, Object> map)
+    {
+        // (Integer id, Integer idExcursie, Integer idPersoana, Integer nrBilete)
+        Integer id = ((Double) map.get("id")).intValue();
+        Integer idExcursie = ((Double) map.get("idExcursie")).intValue();
+        Integer idPersoana = ((Double) map.get("idPersoana")).intValue();
+        Integer nrBilete = ((Double) map.get("nrBilete")).intValue();
+        return new Rezervare(id,idExcursie, idPersoana, nrBilete);
     }
 }
