@@ -33,7 +33,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
     }
 
@@ -55,7 +55,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
     }
 
@@ -65,7 +65,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
@@ -90,7 +90,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
@@ -111,7 +111,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
@@ -132,13 +132,15 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
         while ((output = br.readLine()) != null) {
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
-            return Integer.parseInt(output);
+            Map<String, Object> map = new Gson().fromJson(output, type);
+
+            return ((Double) map.get("left")).intValue();
         }
         return null;
     }
@@ -150,7 +152,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
@@ -172,7 +174,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
@@ -198,7 +200,7 @@ public class TripClient implements ITripClient{
         URL url = requestBuilder.build();
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
