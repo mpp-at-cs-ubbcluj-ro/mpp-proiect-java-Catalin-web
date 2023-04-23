@@ -45,6 +45,13 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    implementation 'org.springframework:spring-web:5.2.2.RELEASE'
+    implementation 'org.springframework:spring-websocket:5.2.2.RELEASE'
+    implementation 'org.springframework:spring-messaging:5.2.2.RELEASE'
+
+    implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
 }
 
 test {

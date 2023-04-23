@@ -1,11 +1,10 @@
 package grup.Client;
 
-import grup.Domain.*;
+import grup.Domain.Excursie;
+import grup.Domain.ObiectivTuristic;
+import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ITripClient {
@@ -30,4 +29,6 @@ public interface ITripClient {
     Integer getIdPersoanaByNume(String numePersoana, String numarTelefon) throws IOException;
 
     void adaugaRezervare(Integer idExcursie,String numeClient, String numarTelefonClient, Integer numarBileteDorite) throws IOException;
+
+    StompSession handleWebSocket(Runnable callback) throws Exception;
 }

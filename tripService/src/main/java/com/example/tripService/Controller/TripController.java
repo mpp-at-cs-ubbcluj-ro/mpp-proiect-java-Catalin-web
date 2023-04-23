@@ -3,13 +3,28 @@ package com.example.tripService.Controller;
 import com.example.tripService.Domain.*;
 import com.example.tripService.Service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("v1")
-public class TripController {
+@EnableWebSocket
+public class TripController extends TextWebSocketHandler implements WebSocketHandler {
 
     @Autowired
     Service srv;
@@ -74,14 +89,8 @@ public class TripController {
         return srv.getPersoanaByNume(numeClient, numarTelefon);
     }
 
-    @PostMapping("/add/Rezervare")
+    @PostMapping("/add/rezervare")
     public void addRezervare(@RequestParam(name = "numeClient") String numeClient, @RequestParam(name = "numarTelefon") String numarTelefon, @RequestParam(name ="numarBileteDorite") Integer numarBileteDorite, @RequestParam(name = "idExcursie") Integer idExcursie) {
         srv.adaugaRezervare(idExcursie,numeClient,numarTelefon,numarBileteDorite);
-    }
-
-    @GetMapping("v1/webSocket")
-    public void addConnection()
-    {
-
     }
 }

@@ -5,6 +5,10 @@ module grup.aplicatie {
     requires org.apache.logging.log4j;
     requires java.net.http;
     requires com.google.gson;
+    requires spring.websocket;
+    requires spring.web;
+    requires spring.messaging;
+    requires spring.core;
 
     opens grup.aplicatie to javafx.fxml;
     exports grup.aplicatie;

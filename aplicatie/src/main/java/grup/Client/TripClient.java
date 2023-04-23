@@ -6,6 +6,14 @@ import grup.Domain.Excursie;
 import grup.Domain.FirmaTransport;
 import grup.Domain.ObiectivTuristic;
 import grup.Domain.Persoana;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -225,5 +233,40 @@ public class TripClient implements ITripClient{
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
+    }
+
+    public StompSession handleWebSocket(Runnable callback) throws Exception {
+        WebSocketClient client = new StandardWebSocketClient();
+
+        WebSocketStompClient stompClient = new WebSocketStompClient(client);
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
+        ClientOneSessionHandler clientOneSessionHandler = new ClientOneSessionHandler();
+        clientOneSessionHandler.setCallBack(callback);
+
+        ListenableFuture<StompSession> sessionAsync =
+                stompClient.connect("ws://localhost:12500/websocket-server", clientOneSessionHandler);
+        StompSession session = sessionAsync.get();
+        session.subscribe("/topic/messages", clientOneSessionHandler);
+        return session;
+    }
+}
+
+class ClientOneSessionHandler extends StompSessionHandlerAdapter {
+    private Runnable callback;
+
+    public void setCallBack(Runnable callback){
+        this.callback=callback;
+    }
+
+    @Override
+    public Type getPayloadType(StompHeaders headers) {
+        callback.run();
+        return String.class;
+    }
+
+    @Override
+    public void handleFrame(StompHeaders headers, Object payload) {
+        callback.run();
     }
 }

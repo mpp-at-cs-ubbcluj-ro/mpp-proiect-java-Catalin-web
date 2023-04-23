@@ -12,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
+import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -61,7 +62,7 @@ public class ExcursiiControler implements Controller {
     TextField numarTelefon;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws Exception {
         numeObiectivColumn.setCellValueFactory(c -> {
             Excursie entity=c.getValue();
             String valoareCelula = null;
@@ -188,11 +189,20 @@ public class ExcursiiControler implements Controller {
 
     private ITripClient client;
 
+    private StompSession session;
+
     @Override
-    public void setClient(ITripClient client) throws IOException {
+    public void setClient(ITripClient client) throws Exception {
         this.client = client;
         List<Excursie> lst = client.getAllExcursii();
         model.setAll(lst);
+        session = client.handleWebSocket(() -> {
+            try {
+                reloadTables();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void cautaOviectiv(ActionEvent actionEvent) throws IOException {
@@ -207,6 +217,7 @@ public class ExcursiiControler implements Controller {
         client.adaugaRezervare(excursie.getId(),nume,nrTelefon,nrBilete);
 
         model.setAll(client.getAllExcursii());
+        session.send("/app/process-message", "map");
         reloadTables();
     }
 

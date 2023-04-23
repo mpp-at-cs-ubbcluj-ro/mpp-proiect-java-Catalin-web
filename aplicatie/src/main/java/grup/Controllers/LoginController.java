@@ -11,8 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class LoginController implements Controller{
     @FXML
     private TextField emailField;
@@ -25,13 +23,13 @@ public class LoginController implements Controller{
     public void initialize() {
     }
 
-    public void onLogin(ActionEvent actionEvent) throws IOException {
+    public void onLogin(ActionEvent actionEvent) throws Exception {
         client.login(emailField.getText(),passField.getText());
         // srv.login(emailField.getText(),passField.getText());
         travelPage(actionEvent);
     }
 
-    public void onRegister(ActionEvent actionEvent) throws IOException {
+    public void onRegister(ActionEvent actionEvent) throws Exception {
         client.inregistrare(emailField.getText(),passField.getText());
         travelPage(actionEvent);
     }
@@ -43,7 +41,7 @@ public class LoginController implements Controller{
         this.client = client;
     }
 
-    private void travelPage(ActionEvent actionEvent) throws IOException {
+    private void travelPage(ActionEvent actionEvent) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("excursii.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stage = new Stage();

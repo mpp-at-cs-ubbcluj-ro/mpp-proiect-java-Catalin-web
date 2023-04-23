@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws Exception {
         Properties props=new Properties();
         try {
             props.load(new FileReader("bd.config"));
