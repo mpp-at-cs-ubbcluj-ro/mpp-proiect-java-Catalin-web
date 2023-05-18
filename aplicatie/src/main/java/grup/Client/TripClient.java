@@ -235,6 +235,54 @@ public class TripClient implements ITripClient{
         int responseCode = con.getResponseCode();
     }
 
+    public Excursie addExcursie(String numeObiectiv, String numeFirma, Integer ora, Float pret, Integer nrLocuriTotale) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl, "/v1/exursie/add");
+        requestBuilder.addValue("numeObiectiv", numeObiectiv);
+        requestBuilder.addValue("numeFirma", numeFirma);
+        requestBuilder.addValue("ora", ora.toString());
+        requestBuilder.addValue("pret", pret.toString());
+        requestBuilder.addValue("nrLocuriTotale", nrLocuriTotale.toString());
+        URL url = requestBuilder.build();
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        int responseCode = con.getResponseCode();
+        return null;
+    }
+
+    public void deleteExcursie(Integer idExcursie) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl, "/v1/exursie/delete");
+        requestBuilder.addValue("idExcursie", idExcursie.toString());
+        URL url = requestBuilder.build();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        int responseCode = con.getResponseCode();
+    }
+
+    public void updateExcursie(Integer idExcursie,String numeObiectiv, String numeFirma, Integer ora, Float pret, Integer nrLocuriTotale) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl, "/v1/exursie/update");
+        requestBuilder.addValue("idExcursie", idExcursie.toString());
+        requestBuilder.addValue("numeObiectiv", numeObiectiv);
+        requestBuilder.addValue("numeFirma", numeFirma);
+        requestBuilder.addValue("ora", ora.toString());
+        requestBuilder.addValue("pret", pret.toString());
+        requestBuilder.addValue("nrLocuriTotale", nrLocuriTotale.toString());
+        URL url = requestBuilder.build();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        int responseCode = con.getResponseCode();
+    }
+
+    public Excursie getExcursie(Integer idExcursie) throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(baseUrl, "/v1/exursie/get");
+        requestBuilder.addValue("idExcursie", idExcursie.toString());
+        URL url = requestBuilder.build();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        return null;
+    }
+
+
     public StompSession handleWebSocket(Runnable callback) throws Exception {
         WebSocketClient client = new StandardWebSocketClient();
 
